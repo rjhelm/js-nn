@@ -96,6 +96,12 @@ class NeuralNetwork {
         this.wih = e("wih + (r .* dwih)", { wih, dwih, r });
         this.who = e("who + (r .* dwho)", { who, dwho, r });
     };
-    predict = (input) => { /* ... */};
-    train = (input, target) => { /* ... */};
+    predict = (input) => {
+        return this.forward(input);
+    };
+    train = (input, target) => {
+        this.forward(input);
+        this.backward(target);
+        this.update();
+    };
 }
