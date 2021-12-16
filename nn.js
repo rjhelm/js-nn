@@ -30,7 +30,25 @@ class NeuralNetwork {
 
     static normalizeData = (data) => { /* ... */};
 
-    forward = (input) => { /* ... */};
+    forward = (input) => {
+        const wih = this.wih;
+        const who = this.who;
+        const act = this.act;
+
+        input = transp(mat([input]));
+
+        const h_in = e("wih * input", { wih, input });
+        const h_out = act(h_in);
+
+        const o_in = e("who * h_out", { who, h_out });
+        const actual = act(o_in);
+
+        this.cache.input = input;
+        this.cache.h_out = h_out;
+        this.cache.actual = actual;
+
+        return actual;
+    };
     backward = (input, target) => { /* ... */};
     update = () => { /* ... */};
     predict = (input) => { /* ... */};
