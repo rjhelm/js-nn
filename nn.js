@@ -49,7 +49,43 @@ class NeuralNetwork {
 
         return actual;
     };
-    backward = (input, target) => { /* ... */};
+    backward = (input, target) => {
+        const who = this.who;
+        const input = this.cache.input;
+        const h_out = this.cache.h_out;
+        const actual = this.cache.actual;
+
+        target = transp(mat([target]));
+
+        // calculate the gradient of error func (E) w.r.t. func (A)
+        const dEdA = sub(target, actual);
+
+        // calculate gradient of activation func (A) w.r.t. the sums ()
+        const o_dAdZ = e("actual .* (1 - actual)", { actual });
+
+        // calculate the error gradient of loss func w.r.t. the output of the network
+        const dwho = e("(dEdA .* o_dAdZ) * h_out", {
+            dEdA,
+            o_dAdZ,
+            h_out,
+        });
+        // calculate the weighted error for the hidden layer
+        const h_err = e("who' * (dEdA .* o_dAdZ)", { who, dEdA, o_dAdZ });
+        // calculate the gradient of activation func (A) w.r.t. the sums ()
+        const h_dAdZ = e("h_out .* (1 - h_out), { h_out }");
+        
+
+        // calculate the error gradient of the loss function w.r.t. the input of the network
+        const dwih = e("(h_err .* h_dAdZ) * input", {
+            h_err,
+            h_dAdZ,
+            input,
+        });
+
+        this.cache.dwhi = dwih;
+        this.cache.dwho = dwho;
+        this.cache.loss.push(sum(sqr(dEdA)));
+    };
     update = () => { /* ... */};
     predict = (input) => { /* ... */};
     train = (input, target) => { /* ... */};
