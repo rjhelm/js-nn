@@ -7,22 +7,45 @@ const sub = math.subtract;
 const sqr = math.square;
 const sum = math.sum;
 
+// neural networks hyperparameters
+const inputnodes = 784;
+const hiddennodes = 100;
+const outputnodes = 10;
+const learningrate = 0.2;
+const threshold = 0.5;
+const iter = 0;
+const iterations = 5;
+
+/* path to the data sets */
+const trainingDataPath = "./mnist/mnist_train.csv";
+const testDataPath = "./mnist/mnist_test.csv";
+
+/* these constants will be filled during data loading and preparation */
+const trainingData = [];
+const trainingLabels = [];
+const testData = [];
+const testLabels = [];
+
+window.onload = async () => {
+    myNN = new NeuralNetwork(inputnodes, hiddennodes, outputnodes, learningrate);
+    /* ... */
+}
 class NeuralNetwork {
     constructor(
-        input_nodes,
-        hidden_nodes,
-        output_nodes,
+        inputnodes,
+        hiddennodes,
+        outputnodes,
         learningrate,
         wih,
         who,
     ) {
-        this.input_nodes = input_nodes;
-        this.hidden_nodes = hidden_nodes;
-        this.output_nodes = output_nodes;
+        this.inputnodes = inputnodes;
+        this.hiddennodes = hiddennodes;
+        this.outputnodes = outputnodes;
         this.learningrate = learningrate;
 
-        this.wih = wih || sub(mat(rand([hidden_nodes, input_nodes])), 0.5);
-        this.who = who || sub(mat(rand([output_nodes, hidden_nodes])), 0.5);
+        this.wih = wih || sub(mat(rand([hiddennodes, inputnodes])), 0.5);
+        this.who = who || sub(mat(rand([outputnodes, hiddennodes])), 0.5);
 
         this.act = (matrix) => mmap(matrix, (x) => 1 / (1 + Math.exp(-x)));
     }
