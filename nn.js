@@ -12,14 +12,14 @@ class NeuralNetwork {
         input_nodes,
         hidden_nodes,
         output_nodes,
-        learning_rate,
+        learningrate,
         wih,
         who,
     ) {
         this.input_nodes = input_nodes;
         this.hidden_nodes = hidden_nodes;
         this.output_nodes = output_nodes;
-        this.learning_rate = learning_rate;
+        this.learningrate = learningrate;
 
         this.wih = wih || sub(mat(rand([hidden_nodes, input_nodes])), 0.5);
         this.who = who || sub(mat(rand([output_nodes, hidden_nodes])), 0.5);
@@ -86,7 +86,16 @@ class NeuralNetwork {
         this.cache.dwho = dwho;
         this.cache.loss.push(sum(sqr(dEdA)));
     };
-    update = () => { /* ... */};
+    update = () => { 
+        const wih = this.wih;
+        const who = this.who;
+        const dwih = this.cache.dwhi;
+        this.dwho = this.cache.dwho;
+        const r = this.learningrate;
+
+        this.wih = e("wih + (r .* dwih)", { wih, dwih, r });
+        this.who = e("who + (r .* dwho)", { who, dwho, r });
+    };
     predict = (input) => { /* ... */};
     train = (input, target) => { /* ... */};
 }
